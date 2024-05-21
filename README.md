@@ -1,1 +1,1 @@
-Trabajo para la materia . Gestor de trabajos terminales SOFTWARE QUALLITY ASSURANCE AND DESING PATTERNS
+Trabajo para la materia SOFTWARE QUALLITY ASSURANCE AND DESING PATTERNS. Aplicacion web para la Gestion de trabajos terminales
