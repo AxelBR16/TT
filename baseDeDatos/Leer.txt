@@ -1,0 +1,16 @@
+Cuenta con los siguientes usuarios ya guardados:
+- Administrador 
+Correo
+a@a
+Contraseña
+1234
+- Alumno
+Correo
+al@al
+Contraseña
+1234
+- Profesor
+Correo
+p@p
+Contraseña
+1234
