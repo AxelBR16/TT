@@ -1,9 +1,14 @@
 <?php
-// request_reset.php
+// Incluye la clase PHPMailer
+use PHPMailer\PHPMailer;
+use PHPMailer\Exception;
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
 
 // Importa la clase Database 
 require 'config/database.php';
-
 
 // Crea una instancia de la clase Database
 $db = new Database();
@@ -25,33 +30,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindValue(1, $email, PDO::PARAM_STR);
         $stmt->bindValue(2, $token, PDO::PARAM_STR);
         $stmt->execute();
-
     }
 
     $token = generateToken();
     storeToken($email, $token, $con);
 
-    // Enviar el correo electrónico
-    function sendResetEmail($email, $token) {
-        $resetLink = "http://localhost/TT/TT%20Rama%20Axel/reset_password.php?token=" . $token;
-        $subject = "Solicitud de restablecimiento de contraseña";
-        $message = "Haz clic en el siguiente enlace para restablecer tu contraseña: " . $resetLink;
-        $headers = "From: no-reply@yourwebsite.com";
+    // Enviar el correo electrónico con PHPMailer
+    // Enviar el correo electrónico con PHPMailer
+function sendResetEmail($email, $token) {
+    $resetLink = "http://localhost/TT/TT%20Rama%20Axel/reset_password.php?token=" . $token;
+    $subject = "Solicitud de restablecimiento de contraseña";
+    $message = "Haz clic en el siguiente enlace para restablecer tu contraseña: " . $resetLink;
 
-        mail($email, $subject, $message, $headers);
-    }
+    // Configuración de PHPMailer
+    $mail = new PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = 'soportecattescom@gmail.com'; // Tu dirección de correo electrónico de Gmail
+    $mail->Password = 'sopot2024'; // Tu contraseña de Gmail
+    $mail->SMTPSecure = 'tls';
+    $mail->Port = 587;
+
+    // Configuración del correo electrónico
+    $mail->setFrom('soportecattescom@gmail.com', 'Terminal Tracker');
+    $mail->addAddress($email); // Corregido aquí
+    $mail->Subject = $subject;
+    $mail->Body = $message;
+
+    // Enviar el correo electrónico
+    $mail->send();
+}
+
 
     sendResetEmail($email, $token);
     echo "Se ha enviado un enlace de recuperación a tu correo electrónico. ".$email;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <!-- Internas -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/principal.css">
     <link rel="stylesheet" href="css/normalize.css">
     <title>Recuperación de Contraseña</title>
     <!-- bootstrap -->
@@ -63,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans&family=PT+Sans:wght@400;700&display=swap" crossorigin="anonymous" as="style">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="conte">
     <main class="login position-absolute top-50 start-50 translate-middle">
         <div class="login__titulo">
             <h1>Terminal Tracker</h1>

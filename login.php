@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Verificar si el usuario es profesor
     $user = verifyUser($con, 'profesores', $email, $password);
     if ($user) {
-        $_SESSION['user_id'] = $user['NumeroEmpleado'];
+        $_SESSION['user_id'] = $user['nEmpleado'];
         $_SESSION['user_name'] = $user['Nombre'];
         $_SESSION['user_role'] = 'profesor';
         header("Location: profesores/profesor.php");
