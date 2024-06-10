@@ -34,7 +34,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador') {
                     <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">Usuarios</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="altaUsuario.php">Alta de Usuarios</a></li>
-                            <li><a class="dropdown-item" href="#">Baja de Usuarios</a></li>
+                            <li><a class="dropdown-item" href="bajaUsuario.php">Baja de Usuarios</a></li>
                         </ul>
                     </li>    
                     <li class="nav-item dropdown">

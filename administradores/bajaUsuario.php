@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alta Usuarios</title>
+    <title>Baja Usuarios</title>
     <!-- Internas -->
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/admi.css">
@@ -47,48 +47,47 @@
         </div>
     </header>
     <main class="contenedor">
-        <h1 class="mt-5 text-center">Alta de Usuarios</h1>
+        <h1 class="mt-5 text-center">Baja de Usuarios</h1>
         <p class="fs-5">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi deserunt ipsum, repellat provident, ut sunt tenetur consectetur asperiores doloribus, quia molestias aliquid iusto dignissimos. Commodi dolorum expedita ratione voluptas velit?
         </p>
         <div class="mt-5">
             <div>
                 <div>
-                    <p class="fw-bolder fs-4 text-center">Formulario para registrar usuarios</p>
-                    <!-- Formulario -->
+                    <p class="fw-bolder fs-4 text-center">Formulario para baja de Usuarios</p>
                     <form class="justify-content-center" id="registrationForm">
-                    <p class="fw-bolder fs-5">Seleccione el tipo de usuario a dar de alta</p>
-                    <div>
-                        <div class="radio-tile-group">
-                            <div class="mr-4 input-container">
-                                <input id="alumno" type="radio" name="role" value="alumno" checked>
-                                <div class="radio-tile">
-                                    <ion-icon name="walk"></ion-icon>
-                                    <label for="alumno">Alumno</label>
+                        <p class="fw-bolder fs-5">Seleccione el tipo de usuario a dar de baja</p>
+                        <div>
+                            <div class="radio-tile-group">
+                                <div class="mr-4 input-container">
+                                    <input id="alumno" type="radio" name="role" value="alumno" checked>
+                                    <div class="radio-tile">
+                                        <ion-icon name="walk"></ion-icon>
+                                        <label for="alumno">Alumno</label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="input-container">
-                                <input id="profesor" type="radio" name="role" value="profesor">
-                                <div class="radio-tile">
-                                    <ion-icon name="school-outline"></ion-icon>
-                                    <label for="profesor">Profesor</label>
+                                <div class="input-container">
+                                    <input id="profesor" type="radio" name="role" value="profesor">
+                                    <div class="radio-tile">
+                                        <ion-icon name="school-outline"></ion-icon>
+                                        <label for="profesor">Profesor</label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                        <!-- Campo de Correo Electrónico -->
+                        <!-- Campo de Boleta o Número de Empleado -->
                         <div class="mb-3">
-                            <label for="email" class="form-label">Correo Electrónico</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese su correo electrónico" required>
+                            <label for="idNumber" class="form-label">Boleta o Número de empleado</label>
+                            <input type="text" class="form-control" id="idNumber" name="idNumber" placeholder="Ingrese su boleta o número de empleado" required>
                         </div>
-                        <!-- Campo de Confirmación de Correo Electrónico -->
+                        <!-- Campo de Confirmación de Boleta o Número de Empleado -->
                         <div class="mb-3">
-                            <label for="confirmEmail" class="form-label">Confirmar Correo Electrónico</label>
-                            <input type="email" class="form-control" id="confirmEmail" name="confirmEmail" placeholder="Confirme su correo electrónico" required>
+                            <label for="confirmIdNumber" class="form-label">Confirme Boleta o Número de empleado</label>
+                            <input type="text" class="form-control" id="confirmIdNumber" name="confirmIdNumber" placeholder="Confirme su boleta o número de empleado" required>
                         </div>
                         <!-- Botón de Envío -->
                         <div class="botonI">
-                            <button type="submit" class="btn btn-primary btn-lg">Enviar correo de confirmación</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Enviar solicitud de baja</button>
                         </div>
                     </form>
                     <div id="responseMessage" class="mt-3"></div>
@@ -113,14 +112,14 @@
     document.getElementById('registrationForm').addEventListener('submit', function(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
-        fetch('sendEmail.php', {
+        fetch('deactivateUser.php', { // Endpoint for user deactivation
             method: 'POST',
             body: formData,
         })
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
-                alert('Exito: ' + data.message);
+                alert('Éxito: ' + data.message);
             } else {
                 alert('Error: ' + data.message);
             }
@@ -128,7 +127,7 @@
         .catch(error => {
             alert('Error al enviar el formulario.');
         });
-    }); 
+    });
     </script>
 </body>
 </html>
