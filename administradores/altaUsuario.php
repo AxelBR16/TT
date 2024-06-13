@@ -1,3 +1,14 @@
+<?php
+// Inicia la sesión
+session_start();
+
+// Verifica si el usuario ha iniciado sesión y si es un administrador
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador') {
+    header("Location: ../index.php");
+    exit();
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,8 +46,8 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">Trabajos Terminales</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Alta de trabajos terminales</a></li>
-                            <li><a class="dropdown-item" href="#">Baja de trabajos terminales</a></li>
+                            <li><a class="dropdown-item" href="altaTT.php">Alta de trabajos terminales</a></li>
+                            <li><a class="dropdown-item" href="bajaTT.php">Baja de trabajos terminales</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -88,7 +99,7 @@
                         </div>
                         <!-- Botón de Envío -->
                         <div class="botonI">
-                            <button type="submit" class="btn btn-primary btn-lg">Enviar correo de confirmación</button>
+                            <button type="submit" class="btn btn-success btn-lg">Enviar correo de confirmación</button>
                         </div>
                     </form>
                     <div id="responseMessage" class="mt-3"></div>
@@ -109,26 +120,7 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-    document.getElementById('registrationForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        fetch('sendEmail.php', {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                alert('Exito: ' + data.message);
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            alert('Error al enviar el formulario.');
-        });
-    }); 
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/altaUsers.js"></script>
 </body>
 </html>

@@ -119,9 +119,31 @@
   margin-top: 4rem;
   background-color: #001449;
   color: var(--blanco);
-  overflow: hidden;
+}
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+.contenido {
+  flex: 1;
+  padding: 20px;
+}
+.footer {
+  background-color: #001449;
+  color: white;
+  padding: 20px;
+  text-align: center;
 }
 .footer__logo{
   font-family: var(--fuenteMarca);
   font-size: 2rem;
+}
+
+.btn-custom {
+  background-color: #001449 !important;
+  color: #fff !important;
+  border-color: #001449 !important;
 }

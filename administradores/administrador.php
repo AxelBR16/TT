@@ -40,8 +40,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador') {
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white" href="#" data-bs-toggle="dropdown" aria-expanded="false">Trabajos Terminales</a>
                         <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Alta de trabajos terminales</a></li>
-                        <li><a class="dropdown-item" href="#">Baja de trabajos terminales</a></li>
+                        <li><a class="dropdown-item" href="altaTT.php">Alta de trabajos terminales</a></li>
+                        <li><a class="dropdown-item" href="bajaTT.php">Baja de trabajos terminales</a></li>
                         </ul>
                     </li>
                 </ul>

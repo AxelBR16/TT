@@ -1,0 +1,11 @@
+.barra_navegacion{
+    background-color: #001449;
+    color: #fff;
+    font-family: var(--fuenteParrafos);
+    font-size: 1rem;
+}
+.footer{
+    margin-top: 4rem;
+    background-color: #001449;
+    color: var(--blanco);
+  }
