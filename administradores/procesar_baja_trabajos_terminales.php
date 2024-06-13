@@ -15,22 +15,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $c_id_trabajo = $_POST['c_id_trabajo'];
 
     if ($c_id_trabajo != $id_trabajo) {
-        $_SESSION['error'] = "Los IDs no coinciden. Favor de verificar :)";
-    }
-    else{
+        $_SESSION['error'] = "Los IDs no coinciden. Favor de verificar.";
+    } else {
         // Crear una instancia de la clase Database y conectar a la base de datos
         $database = new Database();
         $pdo = $database->conectar();
 
         try {
-            // Verificar si el trabajo terminal está registrado
-            $query_check = "SELECT COUNT(*) FROM trabajos_terminales WHERE id_trabajo = :id_trabajo";
-            $stmt_check = $pdo->prepare($query_check);
-            $stmt_check->bindParam(':id_trabajo', $id_trabajo);
-            $stmt_check->execute();
-            $count = $stmt_check->fetchColumn();
+            // Verificar si el trabajo terminal está registrado y obtener la dirección de la carpeta
+            $query_select = "SELECT direccion_almacenamiento FROM trabajos_terminales WHERE id_trabajo = :id_trabajo";
+            $stmt_select = $pdo->prepare($query_select);
+            $stmt_select->bindParam(':id_trabajo', $id_trabajo);
+            $stmt_select->execute();
+            $direccion_almacenamiento = $stmt_select->fetchColumn();
 
-            if ($count === 0) {
+            if (!$direccion_almacenamiento) {
                 $_SESSION['error'] = "Error: El trabajo terminal con ID $id_trabajo no está registrado en la base de datos.";
                 header("Location: bajaTT.php");
                 exit();
@@ -66,18 +65,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Confirmar la transacción
             $pdo->commit();
 
+            // Eliminar la carpeta del trabajo terminal
+            if (file_exists($direccion_almacenamiento)) {
+                // Utilizamos una función recursiva para eliminar directorios y su contenido
+                function eliminarDirectorio($dir) {
+                    $files = array_diff(scandir($dir), array('.', '..'));
+                    foreach ($files as $file) {
+                        (is_dir("$dir/$file")) ? eliminarDirectorio("$dir/$file") : unlink("$dir/$file");
+                    }
+                    return rmdir($dir);
+                }
+                
+                if (!eliminarDirectorio($direccion_almacenamiento)) {
+                    $_SESSION['error'] = "Error al eliminar la carpeta del trabajo terminal.";
+                }
+            }
+
             $_SESSION['success'] = "Trabajo terminal eliminado exitosamente.";
         } catch (PDOException $e) {
             // Revertir la transacción en caso de error
             $pdo->rollBack();
             $_SESSION['error'] = "Error en la ejecución de la consulta: " . $e->getMessage();
+        } finally {
+            // Cerrar la conexión
+            $pdo = null;
+
+            header("Location: bajaTT.php");
+            exit();
         }
     }
-
-        // Cerrar la conexión
-        $pdo = null;
-
-        header("Location: bajaTT.php");
-        exit();
 }
 ?>
