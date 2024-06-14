@@ -66,3 +66,27 @@ h1,h2,h3,h4{
     padding: 5rem 5rem 0 5rem; /*Marge*/
     background-color: var(--grisClaro); 
 }
+
+ /*Footer*/
+ .footer{
+    margin-top: 4rem;
+    background-color: #001449;
+    color: var(--blanco);
+  }
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  .contenido {
+    flex: 1;
+    padding: 20px;
+  }
+  .footer {
+    background-color: #001449;
+    color: white;
+    padding: 20px;
+    text-align: center;
+  }

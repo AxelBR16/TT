@@ -13,6 +13,7 @@ $user_name = isset($_SESSION['user_name']) ? htmlspecialchars($_SESSION['user_na
 $user_lastname = isset($_SESSION['user_lastname']) ? htmlspecialchars($_SESSION['user_lastname']) : 'Apellido no disponible';
 $user_boleta = isset($_SESSION['user_boleta']) ? htmlspecialchars($_SESSION['user_boleta']) : 'Boleta no disponible';
 $user_email = isset($_SESSION['user_email']) ? htmlspecialchars($_SESSION['user_email']) : 'Correo no disponible';
+
 // Configuración de la conexión a la base de datos (ejemplo)
 $host = 'localhost';
 $dbname = 'tt';
@@ -24,21 +25,21 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Consulta para verificar si el alumno está inscrito en algún trabajo terminal
-    $query = "SELECT COUNT(*) AS count_tt FROM alumnos_trabajos WHERE Boleta = :Boleta";
-    $stmt = $pdo->prepare($query);
-    $stmt->bindParam(':Boleta', $_SESSION['user_id']);
-    $stmt->execute();
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+   // Consulta para obtener el ID del trabajo terminal en el que el alumno está inscrito
+   $query = "SELECT id_trabajo FROM alumnos_trabajos WHERE Boleta = :Boleta LIMIT 1";
+   $stmt = $pdo->prepare($query);
+   $stmt->bindParam(':Boleta', $_SESSION['user_id']);
+   $stmt->execute();
+   $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Verificar el resultado de la consulta
-    $count_tt = $result['count_tt'];
-
-    if ($count_tt > 0) {
-        $mensaje_tt = "El alumno está inscrito en $count_tt trabajo terminal.";
-    } else {
-        $mensaje_tt = "El alumno no está inscrito en ningún trabajo terminal.";
-    }
+   // Verificar el resultado de la consulta
+   if ($result) {
+    $_SESSION['id_trabajo_terminal'] = $result['id_trabajo'];
+       $trabajoID = htmlspecialchars($result['id_trabajo']);
+       $mensaje_tt = "Estas inscrito en el trabajo terminal con ID: $trabajoID.";
+   } else {
+       $_SESSION['error'] = "No estás en ningún TT";
+   }
 
 } catch (PDOException $e) {
     echo "Error al conectar con la base de datos: " . $e->getMessage();
@@ -49,25 +50,28 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumno - Terminal Tracker</title>
+    <title>Alumno</title>
     <link rel="stylesheet" href="../css/principal.css">
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/alumno.css">
 
     <!-- bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 </head>
 <body>
-<header class="p-3 barra_navegacion">
+<header class="p-3 barra_navegacion ">
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
                 <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
             </a>
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="alumno.php" class="nav-link px-2 text-white">Inicio</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Protocolo</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Notificaciones</a></li>
+                <li><a href="alumno.php" class="nav-link inicio--active">Inicio</a></li>
+                <li><a href="TT.php" class="nav-link text-white">Trabajo Terminal</a></li>
+                <li><a href="#" class="nav-link text-white">Horarios</a></li>
+                <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
             </ul>
             <div class="text-end">
                 <a href="../logout.php" type="button" class="btn btn-primary">Cerrar sesión</a>
@@ -76,9 +80,34 @@ try {
     </div>
 </header>
 <main class="container mt-5">
-    <h1>Bienvenido, <?php echo htmlspecialchars($user_name); ?></h1>
-    <p>TT: <?php echo htmlspecialchars($mensaje_tt); ?></p>
-    <h2>Datos Generales</h2>
+    <?php
+     echo '<div class="mb-3 inicio_id">';
+     echo '<h1 class="animate__animated animate__heartBeat">Bienvenido, ' . $user_name . '</h1>';
+            if (isset($_SESSION['error'])) {
+                echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
+                ?>
+                <script>
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error :(!',
+                    text: '<?php echo $_SESSION['error']; ?>',
+                    customClass: {
+                        confirmButton: 'btn-custom'
+                    }
+                });
+                </script>
+                <?php
+                unset($_SESSION['error']); 
+        } else {
+            ?>
+            <p class="fs-5"><b><?php echo htmlspecialchars($mensaje_tt); ?></b></p>
+        <?php
+            }
+        echo '</div>';
+        ?>
+
+
+    <h2 class="mt-2">Datos Generales</h2>
     <p>Nombre: <?php echo htmlspecialchars($user_name); ?></p>
     <p>Apellido: <?php echo htmlspecialchars($user_lastname); ?></p>
     <p>Boleta: <?php echo htmlspecialchars($user_boleta); ?></p>
