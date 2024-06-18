@@ -81,12 +81,12 @@ $con = null;
                 <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
             </ul>
             <div class="text-end">
-                <a href="../logout.php" type="button" class="btn btn-primary">Cerrar sesión</a>
+                <a href="../logout.php" type="button" class="text-white btn botonP">Cerrar sesión</a>
             </div>
         </div>
     </div>
 </header>
-<main class="container mt-5 documento">
+<main class="content container mt-5 documento">
     <h1 class="text-center animate__animated animate__bounce">Visualización del Trabajo Terminal</h1>
     <div class="tt_container">
         <?php if ($url_documento): ?>

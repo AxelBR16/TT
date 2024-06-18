@@ -49,7 +49,7 @@
             </div>
         </div>
     </header>
-    <main class="contenedor">
+    <main class="contenido contenedor">
         <h1 class="mt-5 text-center">Baja de Usuarios</h1>
         <p class="fs-5">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Animi deserunt ipsum, repellat provident, ut sunt tenetur consectetur asperiores doloribus, quia molestias aliquid iusto dignissimos. Commodi dolorum expedita ratione voluptas velit?

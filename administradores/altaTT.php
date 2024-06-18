@@ -61,7 +61,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador') {
               </div>
             </div>
           </header>
-        <main class="container mt-3">
+        <main class="contenido container mt-3">
           <h1 class="text-center">Dar de Alta Trabajos Terminales</h1>
           <p class="fs-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea, impedit! Aut, sint obcaecati vel deserunt totam ut corporis amet expedita neque? Tenetur assumenda dolorum eos minima adipisci omnis ratione similique.</p>
           <?php

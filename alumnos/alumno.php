@@ -74,15 +74,15 @@ try {
                 <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
             </ul>
             <div class="text-end">
-                <a href="../logout.php" type="button" class="btn btn-primary">Cerrar sesión</a>
+                <a href="../logout.php" type="button" class=" text-white btn botonP">Cerrar sesión</a>
             </div>
         </div>
     </div>
 </header>
-<main class="container mt-5">
+<main class="content container mt-5">
     <?php
      echo '<div class="mb-3 inicio_id">';
-     echo '<h1 class="animate__animated animate__heartBeat">Bienvenido, ' . $user_name . '</h1>';
+     echo '<h1 class="animate__animated animate__heartBeat">Bienvenid@, ' . $user_name . '</h1>';
             if (isset($_SESSION['error'])) {
                 echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
                 ?>

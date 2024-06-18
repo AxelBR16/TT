@@ -51,7 +51,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'administrador') {
               </div>
             </div>
           </header>
-          <main class="mt-5 contenedor">
+          <main class="mt-5 contenedor contenido">
             <div class="inicio">
                 <h1>Bienvenido, <?php echo htmlspecialchars($_SESSION['user_name']); ?></h1>
                 <img class="inicio__img img-thumbnail"  src="../img/administrador/escudoESCOM.png" alt="escudoESCOM">
