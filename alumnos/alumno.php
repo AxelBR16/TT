@@ -89,7 +89,7 @@ try {
     <div class="inicio content container">
         <?php
         echo '<div class="mb-3 inicio_id">';
-        echo '<h1 class="animate__animated animate__heartBeat">Bienvenid@, ' . $user_name . '</h1>';
+        echo '<h1 class="fontIco animate__animated animate__heartBeat">Bienvenid@, ' . $user_name . '</h1>';
                 if (isset($_SESSION['error'])) {
                     echo '<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>';
                     ?>
@@ -137,7 +137,7 @@ try {
     <div class=" container avisos">
         <div class="datosG__informacion">
             <ion-icon class="icoAviso" name="megaphone-outline"></ion-icon>
-            <h3 class="mt-3">Avisos CATT</h3>
+            <h3 class="mt-3 fontIco">Avisos CATT</h3>
         </div>
         <div>
             <p>

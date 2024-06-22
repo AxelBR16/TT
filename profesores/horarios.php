@@ -6,6 +6,31 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'profesor') {
     header("Location: ../index.php");
     exit();
 }
+
+// Conexión a la base de datos
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "tt";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Conexión fallida: " . $conn->connect_error);
+}
+
+// Obtener el horario prellenado del profesor actual
+$nEmpleado = $_SESSION['user_id']; // Supone que el id del profesor se guarda en la sesión como user_id
+$sql = "SELECT horarios FROM profesores WHERE nEmpleado = $nEmpleado";
+$result = $conn->query($sql);
+
+$prellenado = [];
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $prellenado = json_decode($row['horarios'], true);
+}
+
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -46,38 +71,39 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'profesor') {
     <div class="content container mt-5">
         <h1 class="text-center mb-2">Horario Semanal</h1>
         <p class="mt-3 mb-5">Favor de poner solo las horas libres que tiene a lo largo de la semana marcando en la casilla la hora</p>
-        <table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Hora</th>
-            <th>Lunes</th>
-            <th>Martes</th>
-            <th>Miércoles</th>
-            <th>Jueves</th>
-            <th>Viernes</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
-        $horas = [
-            '7:00 - 8:30', '8:30 - 10:00', '10:00 - 10:30', '10:30 - 12:00',
-            '12:00 - 13:30', '13:30 - 15:00', '15:00 - 16:30', '16:30 - 18:00',
-            '18:00 - 18:30', '18:30 - 20:00', '20:00 - 21:00'
-        ];
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Hora</th>
+                <th>Lunes</th>
+                <th>Martes</th>
+                <th>Miércoles</th>
+                <th>Jueves</th>
+                <th>Viernes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
+            $horas = [
+                '7:00 - 8:30', '8:30 - 10:00', '10:00 - 10:30', '10:30 - 12:00',
+                '12:00 - 13:30', '13:30 - 15:00', '15:00 - 16:30', '16:30 - 18:00',
+                '18:00 - 18:30', '18:30 - 20:00', '20:00 - 21:30'
+            ];
 
-        foreach ($horas as $index => $hora) {
-            echo "<tr>";
-            echo "<td>$hora</td>";
-            foreach ($dias as $dia) {
-                $id = strtolower(str_replace(' ', '', $dia)) . '_' . $index;
-                echo "<td id='$id' onclick='highlightCell(this)'></td>";
+            foreach ($horas as $index => $hora) {
+                echo "<tr>";
+                echo "<td>$hora</td>";
+                foreach ($dias as $dia) {
+                    $id = strtolower(str_replace(' ', '', $dia)) . '_' . $index;
+                    $highlightClass = in_array($id, $prellenado) ? 'high' : '';
+                    echo "<td id='$id' onclick='highlightCell(this)' class='$highlightClass'></td>";
+                }
+                echo "</tr>";
             }
-            echo "</tr>";
-        }
-        ?>
-    </tbody>
-</table>
+            ?>
+        </tbody>
+    </table>
         <div class="d-flex justify-content-center">
             <button onclick="saveSchedule()" class="btn botonP mt-3">Guardar Horario</button>
         </div>
@@ -95,7 +121,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'profesor') {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../js/toast.js"></script>
     <script>
-        let selectedCells = [];
+        let selectedCells = <?php echo json_encode($prellenado); ?>;
 
         function highlightCell(cell) {
             cell.classList.toggle('high');
@@ -110,38 +136,39 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] != 'profesor') {
                 selectedCells.push(cellId);
             }
         }
-                function saveSchedule() {
-    // Convertir el array a JSON para enviarlo al servidor
-    const scheduleData = JSON.stringify(selectedCells);
-    
-    // Enviar los datos al servidor usando fetch
-    fetch('save_schedule.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: scheduleData
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.text().then(text => {
-                throw new Error('Error en la respuesta del servidor: ' + text);
+
+        function saveSchedule() {
+            // Convertir el array a JSON para enviarlo al servidor
+            const scheduleData = JSON.stringify(selectedCells);
+            
+            // Enviar los datos al servidor usando fetch
+            fetch('save_schedule.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: scheduleData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error('Error en la respuesta del servidor: ' + text);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if(data.success) {
+                    Swal.fire('Éxito', data.message || 'Horario guardado correctamente', 'success');
+                } else {
+                    Swal.fire('Error', data.message || 'No se pudo guardar el horario', 'error');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'Ocurrió un error al guardar el horario. Por favor, intente de nuevo y revise la consola para más detalles.', 'error');
             });
         }
-        return response.json();
-    })
-    .then(data => {
-        if(data.success) {
-            Swal.fire('Éxito', data.message || 'Horario guardado correctamente', 'success');
-        } else {
-            Swal.fire('Error', data.message || 'No se pudo guardar el horario', 'error');
-        }
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        Swal.fire('Error', 'Ocurrió un error al guardar el horario. Por favor, intente de nuevo y revise la consola para más detalles.', 'error');
-    });
-}
     </script>
 </body>
 </html>

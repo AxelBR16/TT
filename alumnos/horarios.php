@@ -107,22 +107,121 @@ try {
     <!-- Horarios de Profesores Sinodales -->
     <div class="container">
         <div class="sinodales">
-            <h2>Horarios de Profesores Sinodales</h2>
+            <h2 class="text-center fontIco">Horarios semanales de Profesores Sinodales</h2>
             <ul>
-                <?php foreach ($sinodales as $sinodal): ?>
-                    <li><?php echo $sinodal['nombre'] . ' ' . $sinodal['apellidos'] . ': ' . $sinodal['horarios']; ?></li>
-                <?php endforeach; ?>
+            <?php foreach ($sinodales as $sinodal): ?>
+                <li class="mt-3">
+                <h3 class="text-capitalize"><?php echo $sinodal['nombre'] . ' ' . $sinodal['apellidos'];?></h3>
+                <?php
+                        if ($sinodal['horarios'] === '[]') {
+                            ?>
+                           <p><?php echo 'El profesor aún no ha colocado su horario';?></p>
+                           <ion-icon class="ico" name="sad-outline"></ion-icon>
+                            <?php
+                        } else {
+                            ?>
+                             <table class="mt-3  table table-striped table-hover table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="thea">Hora</th>
+                                        <th class="thea">Lunes</th>
+                                        <th class="thea">Martes</th>
+                                        <th class="thea">Miércoles</th>
+                                        <th class="thea">Jueves</th>
+                                        <th class="thea">Viernes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    
+                                    $prellenado = json_decode($sinodal['horarios'], true);
+                                  
+                                    $dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
+                                    $horas = [
+                                        '7:00 - 8:30', '8:30 - 10:00', '10:00 - 10:30', '10:30 - 12:00',
+                                        '12:00 - 13:30', '13:30 - 15:00', '15:00 - 16:30', '16:30 - 18:00',
+                                        '18:00 - 18:30', '18:30 - 20:00', '20:00 - 21:30'
+                                    ];
+
+                                    foreach ($horas as $index => $hora) {
+                                        echo "<tr>";
+                                        echo "<td class='hora'>$hora</td>";
+                                        foreach ($dias as $dia) {
+                                            $id = strtolower(str_replace(' ', '', $dia)) . '_' . $index;
+                                            $highlightClass = in_array($id, $prellenado) ? 'high' : '';
+                                            echo "<td id='$id' class='$highlightClass'></td>";
+                                        }
+                                        echo "</tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                            <?php
+                        }
+                    ?>
+                </li>
+            <?php endforeach; ?>
             </ul>
         </div>
     </div>
     <!-- Horarios de Profesores Directores -->
-    <div class="container">
+    <div class="container mt-5">
         <div class="directores">
-            <h2>Horarios de Profesores Directores</h2>
+            <h2 class="text-center fontIco">Horarios semanales de Profesores Directores</h2>
             <ul>
-                <?php foreach ($directores as $director): ?>
-                    <li><?php echo $director['nombre'] . ' ' . $director['apellidos'] . ': ' . $director['horarios']; ?></li>
-                <?php endforeach; ?>
+            <?php foreach ($directores as $director): ?>
+                <li>
+                    <h3><?php echo $director['nombre'] . ' ' . $director['apellidos'];?></h3>
+                        <?php 
+                        if ($director['horarios'] === '[]') {
+                            ?>
+                            <p><?php echo 'El profesor aún no ha colocado su horario';?></p>
+                            <ion-icon class="ico" name="sad-outline"></ion-icon>
+                             <?php
+                        } else {
+                            ?>
+                             <table class="mt-3  table table-striped table-hover table-borderless">
+                                <thead>
+                                    <tr>
+                                        <th class="thea">Hora</th>
+                                        <th class="thea">Lunes</th>
+                                        <th class="thea">Martes</th>
+                                        <th class="thea">Miércoles</th>
+                                        <th class="thea">Jueves</th>
+                                        <th class="thea">Viernes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    
+                                    $prellenadoDirector = json_decode($director['horarios'], true);
+                                  
+                                    $dias = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
+                                    $horas = [
+                                        '7:00 - 8:30', '8:30 - 10:00', '10:00 - 10:30', '10:30 - 12:00',
+                                        '12:00 - 13:30', '13:30 - 15:00', '15:00 - 16:30', '16:30 - 18:00',
+                                        '18:00 - 18:30', '18:30 - 20:00', '20:00 - 21:30'
+                                    ];
+
+                                    foreach ($horas as $index => $hora) {
+                                        echo "<tr>";
+                                        echo "<td class='hora'>$hora</td>";
+                                        foreach ($dias as $dia) {
+                                            $id = strtolower(str_replace(' ', '', $dia)) . '_' . $index;
+                                            $highlightClass = in_array($id, $prellenadoDirector) ? 'high' : '';
+                                            echo "<td id='$id' class='$highlightClass'></td>";
+                                        }
+                                        echo "</tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                            <?php
+                        }
+                    ?>
+                </li>
+            <?php endforeach; ?>
+
             </ul>
         </div>
     </div>
@@ -139,6 +238,6 @@ try {
 </div>
 <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jI9t0" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

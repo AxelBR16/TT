@@ -87,7 +87,7 @@ $con = null;
     </div>
 </header>
 <main class="content container mt-5 documento">
-    <h1 class="text-center animate__animated animate__bounce">Visualización del Trabajo Terminal</h1>
+    <h1 class="text-center animate__animated animate__bounce fontIco">Visualización del Trabajo Terminal</h1>
     <div class="tt_container">
         <?php if ($url_documento): ?>
             <iframe src="<?php echo $url_documento; ?>" style="width:100%; height:100%;" frameborder="0"></iframe>
