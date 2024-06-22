@@ -21,7 +21,7 @@
 <div class="d-flex justify-content-center">
     <main class="login__registro">
         <div class="login__titulo">
-            <h1>Terminal Tracker</h1>
+            <h1 class="text-center">Terminal Tracker</h1>
         </div>
         <?php
             $email = isset($_GET['email']) ? htmlspecialchars($_GET['email']) : '';

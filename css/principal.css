@@ -73,6 +73,9 @@ h1,h2,h3,h4{
     background-color: #001449;
     color: var(--blanco);
   }
+  .footerMarca{
+    font-family: var(--fuenteMarca);
+  }
   body, html {
     height: 100%;
     margin: 0;

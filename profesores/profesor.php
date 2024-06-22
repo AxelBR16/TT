@@ -55,6 +55,13 @@ $result = array_merge($result1, $result2);
     <link rel="stylesheet" href="../css/normalize.css">
     <link rel="stylesheet" href="../css/profesor.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+         <!--  -->
+         <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Poetsen+One&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans&family=PT+Sans:wght@400;700&display=swap" crossorigin="anonymous" as="style">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
     <header class="p-3 barra_navegacion">
@@ -65,7 +72,7 @@ $result = array_merge($result1, $result2);
                 </a>
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href="profesor.php" class="nav-link inicio--active">Inicio</a></li>
-                    <li><a href="#" class="nav-link text-white">Horario</a></li>
+                    <li><a href="horarios.php" class="nav-link text-white">Horario</a></li>
                     <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
                 </ul>
                 <div class="text-end">
@@ -114,7 +121,7 @@ $result = array_merge($result1, $result2);
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top ba">
                 <p class="col-md-4 mb-0 text-white">&copy; 2024 Terminal Tracker</p>
                 <a href="administradores/administrador.php" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                    <p class="footer__logo text-white">Terminal Tracker</p>
+                    <p class="footerMarca text-white">Terminal Tracker</p>
                 </a>
             </footer>
         </div>

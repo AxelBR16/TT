@@ -27,6 +27,7 @@ body {
 .content {
     flex: 1;
 }
+
 .footer {
     background-color: #4B1248;
     color: white;
@@ -37,4 +38,7 @@ body {
 }
 .text-j{
     text-align: justify;
+}
+.high{
+    background-color: #ffc300 !important; ;
 }

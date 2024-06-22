@@ -39,13 +39,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Envío para alumnos
             $mail->addAddress($email);
             $mail->isHTML(true);
-            $mail->Subject = 'Registro en Terminal Tracker (Alumno)';
-            $mail->Body    = "Haz clic en el siguiente enlace para completar tu registro como alumno: <a href='$registrationLinkAlumno'>$registrationLinkAlumno</a>";
+            $mail->Subject = 'Registro en Terminal Tracker como Alumno';
+            $mail->Body = "
+                <html>
+                <head>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                        }
+                        .container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            background-color: #f9f9f9;
+                        }
+                        .footer {
+                            margin-top: 20px;
+                            font-size: 14px;
+                            color: #666;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <p>Estimado/a alumno/a,</p>
+                        <p>Le escribimos para informarle que se ha registrado en Terminal Tracker como alumno.</p>
+                        <p>Por favor, haga clic en el siguiente enlace para completar su registro:</p>
+                        <p><a href='$registrationLinkAlumno' style='color: #007bff; text-decoration: none;'>$registrationLinkAlumno</a></p>
+                        <div class='footer'>
+                            <p>Atentamente,</p>
+                            <p>Equipo de Terminal Tracker</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            ";
         } elseif ($role === 'profesor') {
+            // Envío para profesores
             $mail->addAddress($email);
             $mail->isHTML(true);
-            $mail->Subject = 'Registro en Terminal Tracker (Profesor)';
-            $mail->Body    = "Haz clic en el siguiente enlace para completar tu registro como profesor: <a href='$registrationLinkProfesor'>$registrationLinkProfesor</a>";
+            $mail->Subject = 'Registro en Terminal Tracker como Profesor';
+            $mail->Body = "
+                <html>
+                <head>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                        }
+                        .container {
+                            max-width: 600px;
+                            margin: 0 auto;
+                            padding: 20px;
+                            border: 1px solid #ccc;
+                            border-radius: 5px;
+                            background-color: #f9f9f9;
+                        }
+                        .footer {
+                            margin-top: 20px;
+                            font-size: 14px;
+                            color: #666;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <p>Estimado/a profesor/a,</p>
+                        <p>Le escribimos para informarle que se ha registrado en Terminal Tracker como profesor.</p>
+                        <p>Por favor, haga clic en el siguiente enlace para completar su registro:</p>
+                        <p><a href='$registrationLinkProfesor' style='color: #007bff; text-decoration: none;'>$registrationLinkProfesor</a></p>
+                        <div class='footer'>
+                            <p>Atentamente,</p>
+                            <p>Equipo de Terminal Tracker</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            ";         
         } else {
             // En caso de que el rol no esté definido correctamente
             echo json_encode(["status" => "error", "message" => "Rol de usuario no válido."]);

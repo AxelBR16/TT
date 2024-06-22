@@ -77,7 +77,7 @@ $con = null;
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="alumno.php" class="nav-link text-white">Inicio</a></li>
                 <li><a href="TT.php" class="nav-link inicio--active">Trabajo Terminal</a></li>
-                <li><a href="#" class="nav-link text-white">Horarios</a></li>
+                <li><a href="horarios.php" class="nav-link text-white">Horarios</a></li>
                 <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
             </ul>
             <div class="text-end">
@@ -91,6 +91,10 @@ $con = null;
     <div class="tt_container">
         <?php if ($url_documento): ?>
             <iframe src="<?php echo $url_documento; ?>" style="width:100%; height:100%;" frameborder="0"></iframe>
+            <div class="text-center mt-3">
+                
+                <a onclick="agregarUrl()" class="btn btn-primary">Modificar URL</a>
+            </div>
         <?php else: ?>
             <div class="text-center">
                 <ion-icon name="add-circle-outline"  class="tt_container__add  animate__animated animate__rotateIn" onclick="agregarUrl()"></ion-icon>
