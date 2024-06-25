@@ -48,9 +48,6 @@ if ($fila = $stmt->fetch(PDO::FETCH_ASSOC)) {
     header("Location: alumno.php");
     exit();
 }
-
-// Cerrar conexión a la base de datos
-$con = null;
 ?>
 
 <!DOCTYPE html>
@@ -78,7 +75,31 @@ $con = null;
                 <li><a href="alumno.php" class="nav-link text-white">Inicio</a></li>
                 <li><a href="TT.php" class="nav-link inicio--active">Trabajo Terminal</a></li>
                 <li><a href="horarios.php" class="nav-link text-white">Horarios</a></li>
-                <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
+                <li>
+                    <a href="notificaciones.php" class="nav-link text-white">
+                        Notificaciones 
+                        <?php
+                        // Verificar si la conexión PDO está disponible y configurada correctamente
+                        if ($con) {
+                            // Consulta para obtener el número de notificaciones no leídas
+                            $query_count = "SELECT COUNT(*) AS count FROM notificaciones_alumnos WHERE boleta = :Boleta AND leido = 0";
+                            $stmt_count = $con->prepare($query_count);
+                            $stmt_count->bindParam(':Boleta', $_SESSION['user_id']);
+                            $stmt_count->execute();
+                            $count_notificaciones = $stmt_count->fetchColumn();
+
+                            if ($count_notificaciones > 0) {
+                                echo "<span class='badge bg-danger'>$count_notificaciones</span>";
+                            }
+                        } else {
+                            echo "<span class='badge bg-danger'>Error de conexión</span>"; // Mensaje de error si no hay conexión PDO
+                        }
+                        // Cerrar conexión a la base de datos
+                        $con = null;
+                        ?>
+                    </a>
+                </li>
+
             </ul>
             <div class="text-end">
                 <a href="../logout.php" type="button" class="text-white btn botonP">Cerrar sesión</a>

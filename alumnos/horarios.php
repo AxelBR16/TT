@@ -95,7 +95,23 @@ try {
                 <li><a href="alumno.php" class="nav-link text-white">Inicio</a></li>
                 <li><a href="TT.php" class="nav-link text-white">Trabajo Terminal</a></li>
                 <li><a href="horarios.php" class="nav-link inicio--active">Horarios</a></li>
-                <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
+                <li>
+                    <a href="notificaciones.php" class="nav-link text-white">
+                        Notificaciones 
+                        <?php
+                        // Consulta para obtener el número de notificaciones no leídas
+                        $query_count = "SELECT COUNT(*) AS count FROM notificaciones_alumnos WHERE boleta = :Boleta AND leido = 0";
+                        $stmt_count = $pdo->prepare($query_count);
+                        $stmt_count->bindParam(':Boleta', $_SESSION['user_id']);
+                        $stmt_count->execute();
+                        $count_notificaciones = $stmt_count->fetchColumn();
+
+                        if ($count_notificaciones > 0) {
+                            echo "<span class='badge bg-danger'>$count_notificaciones</span>";
+                        }
+                        ?>
+                    </a>
+                </li>
             </ul>
             <div class="text-end">
                 <a href="../logout.php" type="button" class=" text-white btn botonP">Cerrar sesión</a>

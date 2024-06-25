@@ -38,6 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Iniciar una transacción
             $pdo->beginTransaction();
 
+            // Obtener las boletas de los alumnos asignados al trabajo terminal
+            $query_get_alumnos = "SELECT boleta FROM alumnos_trabajos WHERE id_trabajo = :id_trabajo";
+            $stmt_get_alumnos = $pdo->prepare($query_get_alumnos);
+            $stmt_get_alumnos->bindParam(':id_trabajo', $id_trabajo);
+            $stmt_get_alumnos->execute();
+            $alumnos = $stmt_get_alumnos->fetchAll(PDO::FETCH_COLUMN);
+
             // Eliminar las referencias en la tabla alumnos_trabajos
             $query1 = "DELETE FROM alumnos_trabajos WHERE id_trabajo = :id_trabajo";
             $stmt1 = $pdo->prepare($query1);
@@ -75,9 +82,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     return rmdir($dir);
                 }
-                
+
                 if (!eliminarDirectorio($direccion_almacenamiento)) {
                     $_SESSION['error'] = "Error al eliminar la carpeta del trabajo terminal.";
+                }
+            }
+
+            // Insertar notificaciones para los alumnos
+            if (!empty($alumnos)) {
+                $mensaje = "Tu Trabajo Terminal con ID $id_trabajo ha sido dado de baja.";
+                $query_insert_notificacion = "INSERT INTO notificaciones_alumnos (boleta, mensaje) VALUES (:boleta, :mensaje)";
+                $stmt_insert_notificacion = $pdo->prepare($query_insert_notificacion);
+
+                foreach ($alumnos as $boleta) {
+                    $stmt_insert_notificacion->bindParam(':boleta', $boleta);
+                    $stmt_insert_notificacion->bindParam(':mensaje', $mensaje);
+                    $stmt_insert_notificacion->execute();
                 }
             }
 

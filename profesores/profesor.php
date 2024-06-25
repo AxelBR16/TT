@@ -106,7 +106,7 @@ $result = array_merge($result1, $result2);
                     <td><?php echo htmlspecialchars($row['rol']); ?></td>
                     <td>
                         <?php if (!empty($row['urlDocumento'])): ?>
-                            <a href="<?php echo htmlspecialchars($row['urlDocumento']); ?>" target="_blank">Ver más</a>
+                            <a href="<?php echo htmlspecialchars($row['urlDocumento']); ?>" target="_blank" onclick="notificarVisualizacion('<?php echo htmlspecialchars($row['id_trabajo']); ?>', '<?php echo htmlspecialchars($_SESSION['user_name']); ?>')">Ver más</a>
                         <?php else: ?>
                             <span onclick="mostrarAlerta();">Ver más</span>
                         <?php endif; ?>
@@ -128,6 +128,31 @@ $result = array_merge($result1, $result2);
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="../js/toast.js"></script>
+    <script>
+function notificarVisualizacion(id_trabajo, profesor_name) {
+    fetch('notificar.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id_trabajo: id_trabajo,
+            profesor_name: profesor_name
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            console.error('Error:', data.error);
+        } else {
+            console.log(data.message);
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+    </script>
 </body>
 </html>
 

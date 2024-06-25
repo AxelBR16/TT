@@ -28,15 +28,15 @@ $con->beginTransaction();
 
 try {
     // Verifica que Sean menos de 4 Alumnos
-    if(count($alumnos) > 4){
+    if (count($alumnos) > 4) {
         throw new Exception("Solo se permiten máximo 4 integrantes por trabajo terminal");
     }
     // Verifica que Sean menos de 2 Directores 
-    if(count($directores) > 2){
+    if (count($directores) > 2) {
         throw new Exception("Solo se permiten máximo 2 directores por trabajo terminal");
     }
     // Verifica que Sean 3 sinodales
-      if(count($sinodales) != 3){
+    if (count($sinodales) != 3) {
         throw new Exception("Deben ser 3 sinodales");
     }
 
@@ -52,6 +52,10 @@ try {
 
     $sql_insert_alumno = "INSERT INTO ALUMNOS_TRABAJOS (Boleta, id_trabajo) VALUES (?, ?)";
     $stmt_insert_alumno = $con->prepare($sql_insert_alumno);
+
+    // Agregar notificaciones
+    $sql_insert_notificacion = "INSERT INTO  notificaciones_alumnos (boleta, mensaje) VALUES (?, ?)";
+    $stmt_insert_notificacion = $con->prepare($sql_insert_notificacion);
 
     foreach ($alumnos as $boleta) {
         $boleta = trim($boleta);
@@ -72,6 +76,10 @@ try {
 
         // Insertar al alumno en la tabla ALUMNOS_TRABAJOS
         $stmt_insert_alumno->execute([$boleta, $id_trabajo]);
+
+        // Insertar notificación
+        $mensaje = "Has sido dado de alta en el Trabajo Terminal: $titulo";
+        $stmt_insert_notificacion->execute([$boleta, $mensaje]);
     }
 
     // Verificar y asignar directores al trabajo terminal
