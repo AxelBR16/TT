@@ -27,15 +27,15 @@ $sinodales = explode(',', $_POST['sinodales']);
 $con->beginTransaction();
 
 try {
-    // Verifica que Sean menos de 4 Alumnos
+    // Verifica que sean menos de 4 Alumnos
     if (count($alumnos) > 4) {
         throw new Exception("Solo se permiten máximo 4 integrantes por trabajo terminal");
     }
-    // Verifica que Sean menos de 2 Directores 
+    // Verifica que sean menos de 2 Directores
     if (count($directores) > 2) {
         throw new Exception("Solo se permiten máximo 2 directores por trabajo terminal");
     }
-    // Verifica que Sean 3 sinodales
+    // Verifica que sean 3 sinodales
     if (count($sinodales) != 3) {
         throw new Exception("Deben ser 3 sinodales");
     }
@@ -53,9 +53,13 @@ try {
     $sql_insert_alumno = "INSERT INTO ALUMNOS_TRABAJOS (Boleta, id_trabajo) VALUES (?, ?)";
     $stmt_insert_alumno = $con->prepare($sql_insert_alumno);
 
-    // Agregar notificaciones
-    $sql_insert_notificacion = "INSERT INTO  notificaciones_alumnos (boleta, mensaje) VALUES (?, ?)";
-    $stmt_insert_notificacion = $con->prepare($sql_insert_notificacion);
+    // Agregar notificaciones para alumnos
+    $sql_insert_notificacion_alumno = "INSERT INTO notificaciones_alumnos (boleta, mensaje) VALUES (?, ?)";
+    $stmt_insert_notificacion_alumno = $con->prepare($sql_insert_notificacion_alumno);
+
+    // Agregar notificaciones para profesores
+    $sql_insert_notificacion_profesor = "INSERT INTO notificaciones_profesores (nEmpleado, mensaje) VALUES (?, ?)";
+    $stmt_insert_notificacion_profesor = $con->prepare($sql_insert_notificacion_profesor);
 
     foreach ($alumnos as $boleta) {
         $boleta = trim($boleta);
@@ -77,9 +81,9 @@ try {
         // Insertar al alumno en la tabla ALUMNOS_TRABAJOS
         $stmt_insert_alumno->execute([$boleta, $id_trabajo]);
 
-        // Insertar notificación
-        $mensaje = "Has sido dado de alta en el Trabajo Terminal: $titulo";
-        $stmt_insert_notificacion->execute([$boleta, $mensaje]);
+        // Insertar notificación al alumno
+        $mensaje_alumno = "Has sido dado de alta en el Trabajo Terminal: $titulo";
+        $stmt_insert_notificacion_alumno->execute([$boleta, $mensaje_alumno]);
     }
 
     // Verificar y asignar directores al trabajo terminal
@@ -100,6 +104,10 @@ try {
 
         // Insertar al director en la tabla DIRECTORES_TRABAJOS
         $stmt_insert_director->execute([$nEmpleado, $id_trabajo]);
+
+        // Insertar notificación al director
+        $mensaje_profesor = "Has sido asignado como director del Trabajo Terminal: $titulo. Con ID $id_trabajo";
+        $stmt_insert_notificacion_profesor->execute([$nEmpleado, $mensaje_profesor]);
     }
 
     // Verificar y asignar sinodales al trabajo terminal
@@ -120,6 +128,10 @@ try {
 
         // Insertar al sinodal en la tabla SINODALES_TRABAJOS
         $stmt_insert_sinodal->execute([$nEmpleado, $id_trabajo]);
+
+        // Insertar notificación al sinodal
+        $mensaje_profesor = "Has sido asignado como sinodal del Trabajo Terminal: $titulo. Con ID: $id_trabajo";
+        $stmt_insert_notificacion_profesor->execute([$nEmpleado, $mensaje_profesor]);
     }
 
     // Confirmar la transacción

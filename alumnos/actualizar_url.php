@@ -27,6 +27,45 @@ if (isset($_POST['url_documento'])) {
     $stmt->bindParam(':url_documento', $url_documento, PDO::PARAM_STR);
     $stmt->bindParam(':id_trabajo', $id_trabajo, PDO::PARAM_INT);
 
+    $query_get_sinodales = "SELECT nEmpleado FROM sinodales_trabajos WHERE id_trabajo = :id_trabajo";
+    $stmt_get_sinodales = $con->prepare($query_get_sinodales);
+    $stmt_get_sinodales->bindParam(':id_trabajo', $id_trabajo);
+    $stmt_get_sinodales->execute();
+    $sinodales = $stmt_get_sinodales->fetchAll(PDO::FETCH_COLUMN);
+
+    // Obtener los IDs de los profesores (directores y sinodales) antes de eliminar las referencias
+    $query_get_directores = "SELECT nEmpleado FROM directores_trabajos WHERE id_trabajo = :id_trabajo";
+    $stmt_get_directores = $con->prepare($query_get_directores);
+    $stmt_get_directores->bindParam(':id_trabajo', $id_trabajo);
+    $stmt_get_directores->execute();
+    $directores = $stmt_get_directores->fetchAll(PDO::FETCH_COLUMN);
+
+    // Insertar notificaciones para los profesores (directores y sinodales)
+    $mensaje_profesores = "La URL del documento del Trabajo Terminal $id_trabajo ha sido actualizada.";
+
+    if (!empty($directores)) {
+        $query_insert_notif_directores = "INSERT INTO notificaciones_profesores (nEmpleado, mensaje) VALUES (:nEmpleado, :mensaje)";
+        $stmt_insert_notif_directores = $con->prepare($query_insert_notif_directores);
+
+        foreach ($directores as $nEmpleado) {
+            $stmt_insert_notif_directores->bindParam(':nEmpleado', $nEmpleado);
+            $stmt_insert_notif_directores->bindParam(':mensaje', $mensaje_profesores);
+            $stmt_insert_notif_directores->execute();
+        }
+    }
+
+    if (!empty($sinodales)) {
+        $query_insert_notif_sinodales = "INSERT INTO notificaciones_profesores (nEmpleado, mensaje) VALUES (:nEmpleado, :mensaje)";
+        $stmt_insert_notif_sinodales = $con->prepare($query_insert_notif_sinodales);
+
+        foreach ($sinodales as $nEmpleado) {
+            $stmt_insert_notif_sinodales->bindParam(':nEmpleado', $nEmpleado);
+            $stmt_insert_notif_sinodales->bindParam(':mensaje', $mensaje_profesores);
+            $stmt_insert_notif_sinodales->execute();
+        }
+    }
+
+
     if ($stmt->execute()) {
         echo "success";
     } else {

@@ -45,6 +45,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt_get_alumnos->execute();
             $alumnos = $stmt_get_alumnos->fetchAll(PDO::FETCH_COLUMN);
 
+            // Obtener los IDs de los profesores (directores y sinodales) antes de eliminar las referencias
+            $query_get_directores = "SELECT nEmpleado FROM directores_trabajos WHERE id_trabajo = :id_trabajo";
+            $stmt_get_directores = $pdo->prepare($query_get_directores);
+            $stmt_get_directores->bindParam(':id_trabajo', $id_trabajo);
+            $stmt_get_directores->execute();
+            $directores = $stmt_get_directores->fetchAll(PDO::FETCH_COLUMN);
+
+            $query_get_sinodales = "SELECT nEmpleado FROM sinodales_trabajos WHERE id_trabajo = :id_trabajo";
+            $stmt_get_sinodales = $pdo->prepare($query_get_sinodales);
+            $stmt_get_sinodales->bindParam(':id_trabajo', $id_trabajo);
+            $stmt_get_sinodales->execute();
+            $sinodales = $stmt_get_sinodales->fetchAll(PDO::FETCH_COLUMN);
+            
+
+
             // Eliminar las referencias en la tabla alumnos_trabajos
             $query1 = "DELETE FROM alumnos_trabajos WHERE id_trabajo = :id_trabajo";
             $stmt1 = $pdo->prepare($query1);
@@ -98,6 +113,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $stmt_insert_notificacion->bindParam(':boleta', $boleta);
                     $stmt_insert_notificacion->bindParam(':mensaje', $mensaje);
                     $stmt_insert_notificacion->execute();
+                }
+            }
+
+            // Insertar notificaciones para los profesores (directores y sinodales)
+            $mensaje_profesores = "El Trabajo Terminal con ID $id_trabajo, en el cual participabas, ha sido dado de baja.";
+
+            if (!empty($directores)) {
+                $query_insert_notif_directores = "INSERT INTO notificaciones_profesores (nEmpleado, mensaje) VALUES (:nEmpleado, :mensaje)";
+                $stmt_insert_notif_directores = $pdo->prepare($query_insert_notif_directores);
+
+                foreach ($directores as $nEmpleado) {
+                    $stmt_insert_notif_directores->bindParam(':nEmpleado', $nEmpleado);
+                    $stmt_insert_notif_directores->bindParam(':mensaje', $mensaje_profesores);
+                    $stmt_insert_notif_directores->execute();
+                }
+            }
+
+            if (!empty($sinodales)) {
+                $query_insert_notif_sinodales = "INSERT INTO notificaciones_profesores (nEmpleado, mensaje) VALUES (:nEmpleado, :mensaje)";
+                $stmt_insert_notif_sinodales = $pdo->prepare($query_insert_notif_sinodales);
+
+                foreach ($sinodales as $nEmpleado) {
+                    $stmt_insert_notif_sinodales->bindParam(':nEmpleado', $nEmpleado);
+                    $stmt_insert_notif_sinodales->bindParam(':mensaje', $mensaje_profesores);
+                    $stmt_insert_notif_sinodales->execute();
                 }
             }
 

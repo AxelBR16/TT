@@ -56,7 +56,7 @@ $result = array_merge($result1, $result2);
     <link rel="stylesheet" href="../css/profesor.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
          <!--  -->
-         <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato&family=Poetsen+One&display=swap" rel="stylesheet">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Open+Sans&family=PT+Sans:wght@400;700&display=swap" crossorigin="anonymous" as="style">
@@ -73,7 +73,23 @@ $result = array_merge($result1, $result2);
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href="profesor.php" class="nav-link inicio--active">Inicio</a></li>
                     <li><a href="horarios.php" class="nav-link text-white">Horario</a></li>
-                    <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
+                    <li>
+                        <a href="notificaciones.php" class="nav-link text-white">
+                            Notificaciones 
+                            <?php
+                            // Consulta para obtener el número de notificaciones no leídas
+                            $query_count = "SELECT COUNT(*) AS count FROM notificaciones_profesores WHERE nEmpleado = :nEmpleado AND leido = 0";
+                            $stmt_count = $conn->prepare($query_count);
+                            $stmt_count->bindParam(':nEmpleado', $_SESSION['user_id']);
+                            $stmt_count->execute();
+                            $count_notificaciones = $stmt_count->fetchColumn();
+
+                            if ($count_notificaciones > 0) {
+                                echo "<span class='badge bg-danger'>$count_notificaciones</span>";
+                            }
+                            ?>
+                        </a>
+                    </li>
                 </ul>
                 <div class="text-end">
                     <a href="../logout.php" type="button" class="btn botonP">Cerrar sesión</a>

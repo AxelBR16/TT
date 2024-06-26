@@ -30,7 +30,6 @@ if ($result->num_rows > 0) {
     $prellenado = json_decode($row['horarios'], true);
 }
 
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -60,7 +59,26 @@ $conn->close();
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <li><a href="profesor.php" class="nav-link text-white">Inicio</a></li>
                     <li><a href="horarios.php" class="nav-link inicio--active">Horario</a></li>
-                    <li><a href="#" class="nav-link text-white">Notificaciones</a></li>
+                    <li>
+                        <a href="notificaciones.php" class="nav-link text-white">
+                            Notificaciones 
+                            <?php
+                            // Consulta para obtener el número de notificaciones no leídas
+                            $query_count = "SELECT COUNT(*) AS count FROM notificaciones_profesores WHERE nEmpleado = ? AND leido = 0";
+                            if ($stmt_count = $conn->prepare($query_count)) {
+                                $stmt_count->bind_param("i", $_SESSION['user_id']);
+                                $stmt_count->execute();
+                                $stmt_count->bind_result($count_notificaciones);
+                                $stmt_count->fetch();
+                                $stmt_count->close();
+
+                                if ($count_notificaciones > 0) {
+                                    echo "<span class='badge bg-danger'>$count_notificaciones</span>";
+                                }
+                            }
+                            ?>
+                        </a>
+                    </li>
                 </ul>
                 <div class="text-end">
                     <a href="../logout.php" type="button" class="btn botonP">Cerrar sesión</a>
